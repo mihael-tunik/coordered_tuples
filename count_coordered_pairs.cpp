@@ -12,13 +12,62 @@ using namespace std;
 
 typedef unsigned long long ull;
 
+class FenwickTree2D {
+
+    public:
+        int n, m;
+        vector <vector <ull> > t;
+
+    FenwickTree2D(int _n, int _m){
+        this->n = _n;
+        this->m = _m;
+
+        this->t.resize(n + 1);
+        for(int i = 0; i < n + 1; ++i)
+           t[i].assign(m+1, 0);
+    }
+
+    void modify(int r, int c, ull d) {
+        r++, c++;
+        for (int i = r; i <= n; i += i & -i)
+            for (int j = c; j <= m; j += j & -j) 
+                t[i][j] += d;
+    }
+
+    ull prefix(int r, int c) {
+        r++, c++;
+        ull sum = 0;
+        for (int i = r; i > 0; i -= i & -i)
+            for (int j = c; j > 0; j -= j & -j) 
+                sum += t[i][j];
+        return sum;
+    }
+
+};
+
+ull count_coordered_fenwick_2d(vector <int> a, vector <int> b){
+    ull n = a.size(), cnt = 0, M = 20000;
+    FenwickTree2D range_tree(M+1, M+1);
+    
+    vector <pair <int, int>> c(n);
+    for(int i = 0; i < n; ++i)
+       c[i] = {a[i], b[i]};
+    sort(c.begin(), c.end());
+
+    for(int i = 0; i < n; ++i){
+        range_tree.modify(c[i].first, c[i].second, 1);
+        cnt += range_tree.prefix(c[i].first-1, c[i].second-1);
+    }
+    return cnt;
+}
+
 class FenwickTree{
     public:
         vector <ull> t;
         int n;
         
     FenwickTree(int n){
-        this->t.assign(n, 0);
+        this->t.assign(n+1, 0);
         this->n = n;
     }
     
@@ -41,8 +90,8 @@ class FenwickTree{
 
 /* count #{a[i] < a[j] && p[i] < p[j]}, p is permutation */
 ull count_coordered_fenwick_p(vector <int> a, vector <int> p){
-    ull n = a.size(), cnt = 0, M = 1000;
-    FenwickTree range_tree(M);
+    ull n = a.size(), cnt = 0, M = 20000;
+    FenwickTree range_tree(M+1);
     
     for(int i = 0; i < n; ++i){
         range_tree.modify(a[p[i]], 1);
@@ -138,24 +187,33 @@ int main(void){
 
     cout << endl << "failed: " << fails << "/" << tests << endl << endl;
     /* now max test */
-    int n_max = 30000;
+    int n_max = 50000;
 
     a.resize(n_max), b.resize(n_max);
     for(int i = 0; i < n_max; ++i)
-        a[i] = rand() % 100, b[i] = rand() % 100;
+        a[i] = rand() % 20000, b[i] = rand() % 20000;
 
-    auto s1 = chrono::high_resolution_clock::now();
-    ull cnt_1 = count_coordered_fenwick(a, b);
-    auto s2 = chrono::high_resolution_clock::now();
+    std::chrono::high_resolution_clock::time_point start, stop;
     
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s2-s1).count()/1000);
+    start = chrono::high_resolution_clock::now();
+    ull cnt_1 = count_coordered(a, b);
+    stop = chrono::high_resolution_clock::now();
+    
+    printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
 
-    auto s3 = chrono::high_resolution_clock::now();
-    ull cnt_2 = count_coordered(a, b);
-    auto s4 = chrono::high_resolution_clock::now();
+    start = chrono::high_resolution_clock::now();
+    ull cnt_2 = count_coordered_fenwick_2d(a, b);
+    stop = chrono::high_resolution_clock::now();
     
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(s4-s3).count()/1000);   
-    printf("maxtest count: %llu, check: %llu\n", cnt_1, cnt_2);
+    printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
+
+    start = chrono::high_resolution_clock::now();
+    ull cnt_3 = count_coordered_fenwick(a, b);
+    stop = chrono::high_resolution_clock::now();
+    
+    printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
+
+    printf("maxtest count: %llu, checks: %llu, %llu\n", cnt_3, cnt_1, cnt_2);
 
     return 0;
 }
