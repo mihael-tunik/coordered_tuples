@@ -12,11 +12,12 @@ Or (with different order operator) of the following:
 - Given array _a_ of _n_ elements, count number of pairs $a_i > a_j, i < j$. 
 
 Both mentioned problems are twins to each other.
-For example, in 'distinct elements' case it's simply $\# \{a_i < a_j, i < j\} = \frac{n(n-1)}{2} - \# \{a_i > a_j, i < j\}$. 
+For example, in 'distinct elements' case it's simply $\sum_{\{a_i < a_j, i < j\}} 1 = \frac{n(n-1)}{2} - \sum_{\{a_i > a_j, i < j\}} 1 $. 
+
 Any of them can be solved in quasilinear time with divide-and-conquer or with any range-sum-point-update container.
 
 But what if we count array elements according to elements of another array instead of indexes? This bring us back to the starting problem.
-Long story short general version also can be solved for $O(n \log n)$. 
+Long story short general version also can be solved for $O(n \cdot \log n)$. 
 See details here:
 ```cpp
 ull count_coordered_fenwick(vector <int> a, vector <int> b);
