@@ -12,13 +12,6 @@ using namespace std;
 
 typedef unsigned long long ull;
 
-void print_array(vector <int> v){
-    int vs = v.size();
-    for(int i = 0; i < vs; ++i)
-        printf("%3i ", v[i]);
-    printf("\n");
-}
-
 class FenwickTree{
     public:
         vector <ull> t;
@@ -46,25 +39,7 @@ class FenwickTree{
     }
 };
 
-/* 
-    count #{a[i] < a[j] && i < j}
-    for exactly len elements of a starting from a[start]
-*/ 
-ull count_ordered_fenwick(vector <int> a){
-    ull n = a.size(), cnt = 0, M = 1000;
-    FenwickTree range_tree(M);
-    
-    for(int i = 0; i < n; ++i){
-        range_tree.modify(a[i], 1);
-        cnt += range_tree.prefix(a[i] - 1);
-    }
-    return cnt;
-}
-
-/* 
-   count #{a[i] < a[j] && p[i] < p[j]}
-   p is permutation, p.size() == a.size() 
-*/
+/* count #{a[i] < a[j] && p[i] < p[j]}, p is permutation */
 ull count_coordered_fenwick_p(vector <int> a, vector <int> p){
     ull n = a.size(), cnt = 0, M = 1000;
     FenwickTree range_tree(M);
@@ -81,7 +56,7 @@ void compute_equal_groups(vector <pair <int, int>> &pairs, vector <pair <int, in
 
     pairs.push_back({INT_MAX, -1});
     for(int i = 1; i < n + 1; ++i){
-       auto [value, index] = pairs[i];
+       auto [value, _] = pairs[i];
        if(value != state){
            eq_groups.push_back({l, r});
            l = i, r = i, state = value;
@@ -89,15 +64,12 @@ void compute_equal_groups(vector <pair <int, int>> &pairs, vector <pair <int, in
        }
        ++r;
     }
-    pairs.pop_back();
 }
 
 // a.size() == b.size()
 ull count_coordered_fenwick(vector <int> a, vector <int> b){
     ull n = a.size(), sum = 0;
-
-    vector <pair<int, int>> b_indexed(n);
-    vector <pair<int, int>> eq_groups;
+    vector <pair<int, int>> b_indexed(n), eq_groups;
     vector <int> b_p(n);
 
     for(int i = 0; i < n; ++i)
@@ -111,11 +83,10 @@ ull count_coordered_fenwick(vector <int> a, vector <int> b){
 
     for(auto [l, r] : eq_groups){
         int len = r - l + 1; 
-        vector <int> a_group(len);
+        vector <int> a_group(len), range(len);
         for(int i = 0; i < len; ++i)
-            a_group[i] = a[b_p[l + i]];
-        
-        sum += count_ordered_fenwick(a_group); //if(len > 1)
+            a_group[i] = a[b_p[l + i]], range[i] = i;
+        sum += count_coordered_fenwick_p(a_group, range);
     }
     return count_coordered_fenwick_p(a, b_p) - sum;
 }
@@ -128,6 +99,13 @@ ull count_coordered(vector <int> a, vector <int> b){
             if(a[i] < a[j] && b[i] < b[j])
                 ++cnt;
     return cnt;
+}
+
+void print_array(vector <int> v){
+    int vs = v.size();
+    for(int i = 0; i < vs; ++i)
+        printf("%3i ", v[i]);
+    printf("\n");
 }
 
 int main(void){
@@ -159,7 +137,7 @@ int main(void){
     }
 
     cout << endl << "failed: " << fails << "/" << tests << endl << endl;
-
+    /* now max test */
     int n_max = 30000;
 
     a.resize(n_max), b.resize(n_max);
