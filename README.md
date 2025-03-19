@@ -17,8 +17,10 @@ For example, in 'distinct elements' case it's simply $\sum_{\{a_i < a_j, i < j\}
 Any of them can be solved in quasilinear time with divide-and-conquer or with any range-sum-point-update container.
 
 But what if we count array elements according to elements of another array instead of indexes? This bring us back to the starting problem.
-Long story short general version also can be solved for $O(n \cdot \log n)$. 
+Long story short general version also can be solved in $O(n \cdot \log^2 n)$ and even in $O(n \cdot \log \: n)$. 
 See details here:
 ```cpp
-ull count_coordered_fenwick(vector <int> a, vector <int> b);
+ull count_coordered(vector <int> a, vector <int> b); // O(n^2)
+ull count_coordered_fenwick_2d(vector <int> a, vector <int> b); // O(n (log n)^2)
+ull count_coordered_fenwick(vector <int> a, vector <int> b); // O(n log n)
 ```
