@@ -7,6 +7,7 @@
 #include <map>
 #include <algorithm>
 #include <iostream>
+#include "profile.h"
 
 using namespace std;
 
@@ -45,7 +46,7 @@ class FenwickTree2D {
 
 };
 
-ull count_coordered_fenwick_2d(vector <int> a, vector <int> b){
+ull count_coordered_fenwick_2d(vector <int> &a, vector <int> &b){
     ull n = a.size(), cnt = 0, M = 20000;
     FenwickTree2D range_tree(M+1, M+1);
     
@@ -116,7 +117,7 @@ void compute_equal_groups(vector <pair <int, int>> &pairs, vector <pair <int, in
 }
 
 // a.size() == b.size()
-ull count_coordered_fenwick(vector <int> a, vector <int> b){
+ull count_coordered_fenwick(vector <int> &a, vector <int> &b){
     ull n = a.size(), sum = 0;
     vector <pair<int, int>> b_indexed(n), eq_groups;
     vector <int> b_p(n);
@@ -140,7 +141,7 @@ ull count_coordered_fenwick(vector <int> a, vector <int> b){
     return count_coordered_fenwick_p(a, b_p) - sum;
 }
 
-ull count_coordered(vector <int> a, vector <int> b){
+ull count_coordered(vector <int> &a, vector <int> &b){
     ull n = a.size(), cnt = 0;
 
     for(int i = 0; i < n; ++i)
@@ -179,41 +180,22 @@ int main(void){
         
         printf("count: %i, check: %i\n", cnt_1, cnt_2);
         
-        if(cnt_1 != cnt_2){
+        if(cnt_1 != cnt_2)
             fails++;
-            //return -1;
-        }
     }
 
     cout << endl << "failed: " << fails << "/" << tests << endl << endl;
     /* now max test */
-    int n_max = 50000;
+    /*int n_max = 20000;
 
     a.resize(n_max), b.resize(n_max);
     for(int i = 0; i < n_max; ++i)
         a[i] = rand() % 20000, b[i] = rand() % 20000;
 
-    std::chrono::high_resolution_clock::time_point start, stop;
-    
-    start = chrono::high_resolution_clock::now();
-    ull cnt_1 = count_coordered(a, b);
-    stop = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
+    int cnt_1 = profile(&count_coordered, a, b);
+    int cnt_2 = profile(&count_coordered_fenwick_2d, a, b);
+    int cnt_3 = profile(&count_coordered_fenwick, a, b);
 
-    start = chrono::high_resolution_clock::now();
-    ull cnt_2 = count_coordered_fenwick_2d(a, b);
-    stop = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
-
-    start = chrono::high_resolution_clock::now();
-    ull cnt_3 = count_coordered_fenwick(a, b);
-    stop = chrono::high_resolution_clock::now();
-    
-    printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
-
-    printf("maxtest count: %llu, checks: %llu, %llu\n", cnt_3, cnt_1, cnt_2);
-
+    printf("maxtest count: %i, %i, %i\n", cnt_1, cnt_2, cnt_3);*/
     return 0;
 }
