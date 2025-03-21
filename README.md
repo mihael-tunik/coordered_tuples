@@ -68,7 +68,7 @@ However, when _b_ contains equal elements this algorithm would count extra pairs
 To correct this we need to iterate groups of equal elements in _b_ 
 and decrease the answer by number of pairs ordered by _a_, equal by _b_.
 
-Corrections are made in $\sum n_k \log(n_k) < \sum n_k \log(n) = O(n \log(n))$ time, where $n_1..k$ are sizes of groups with equal elements.
+Corrections are made in $\sum n_k \log(n_k) < \sum n_k \log(n) = O(n \log(n))$ time, where $n_{1..k}$ are sizes of groups with equal elements.
 
 ### Build
 ```
