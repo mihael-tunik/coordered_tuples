@@ -65,9 +65,6 @@ for i in range(n):
    cnt += T.prefix(a[p[i]]-1)
 ```
 
-##  23 7 11 9 12 3 4 1 5
-##   1 2  3 4  5 6 7 8 9
-##   8 6  7 9  2 4 3 5 1
 However, when _b_ contains equal elements this algorithm would count extra pairs. 
 To correct this we need to iterate groups of equal elements in _b_ 
 and decrease the answer by number of pairs ordered by _a_, equal by _b_.
