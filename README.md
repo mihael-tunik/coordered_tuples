@@ -12,7 +12,7 @@ Or (with different order operator) of the following:
 - Given array _a_ of _n_ elements, count number of pairs $a_i > a_j, i < j$. 
 
 Both mentioned problems are twins to each other.
-For example, in 'distinct elements' case it's simply $\sum_{\{a_i < a_j, i < j\}} 1 = \frac{n(n-1)}{2} - \sum_{\{a_i > a_j, i < j\}} 1 $. 
+For example, in 'distinct elements' case it's simply $\sum_{\{a_i < a_j, i < j\}} 1 = \frac{n(n-1)}{2} - \sum_{\{a_i > a_j, i < j\}} 1$ 
 
 Any of them can be solved in quasilinear time with divide-and-conquer or with any range-sum-point-update container.
 
@@ -27,7 +27,7 @@ ull count_coordered_fenwick(vector <int> a, vector <int> b); // O(n log n)
 ```
 
 ### Solution $O(n \cdot \log^2 n)$
-Let's start from standard inversion count algorithm:
+Let's start from standard ordered pairs count algorithm:
 ```
 for i in range(n):
    T.update(a[i], 1)
@@ -55,7 +55,7 @@ This works in $O(n \cdot \log^2 n)$ time for 2D Fenwick tree.
 
 ### Solution $O(n \cdot \log n)$
 There's another way how we can benefit from permutation properties.
-If _b_ is permutation and _a_ is arbitrary array, then the following algorithm would count coordered pairs:
+If _b_ is array with distinct elements and _a_ is arbitrary array, then the following algorithm would count coordered pairs:
 ```
 b = sort((b, range(n)))
 p = b[1, :]
@@ -64,12 +64,22 @@ for i in range(n):
    T.update(a[p[i]], 1)
    cnt += T.prefix(a[p[i]]-1)
 ```
+
+##  23 7 11 9 12 3 4 1 5
+##   1 2  3 4  5 6 7 8 9
+##   8 6  7 9  2 4 3 5 1
 However, when _b_ contains equal elements this algorithm would count extra pairs. 
 To correct this we need to iterate groups of equal elements in _b_ 
 and decrease the answer by number of pairs ordered by _a_, equal by _b_.
 
+It is not necessary to use
+```
+sum += count_coordered_fenwick_p(a_group, range);
+```
+one can use any code which counts ordered pairs in single array, range variable is redundant.
 Corrections are made in $\sum n_k \log(n_k) < \sum n_k \log(n) = O(n \log(n))$ time, where $n_{1..k}$ are sizes of groups with equal elements.
-
+This version of algorithm contains sorting, split sorted array in linear time and counting pairs with some corrections.
+Resulting complexity: $O(n \cdot \log n)$.
 ### Build
 ```
 g++ -O3 -march=native -ffast-math -fno-tree-vectorize -fno-exceptions count_coordered_pairs.cpp -o count
