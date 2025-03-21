@@ -35,11 +35,11 @@ for i in range(n):
 ```
 Here, _T_ is counting array initialized by zeros, where we store counts for every value in _a_.
 To perform both operations efficiently one should choose any $O(\log n)$ range query structure as _T_, let's say Fenwick tree.
-It works, because updates are made in order of indexes in _a_ and so _T.prefix(a[i]-1)_ counts only _a[k] < a[i]_ with _k < i_ by default.
-Every _k < i_ appears before _i_.
+It works, because updates are made in order of indexes in _a_ and so _T.prefix(a[i]-1)_ counts only $a_k < a_i$ with $k < i$ by default.
+Every $k < i$ appears before $i$.
 
 Let's modify our task to exploit similar idea. Main observation that given arrays _a, b_ we can take any permutation of both and that
-doesn't change the number of coordered pairs. Indeed any pair _a[i] < a[j], b[i] < b[j]_ would be mapped to _a[p[i]] < a[p[j]], b[p[i]] < b[p[j]]_.
+doesn't change the number of coordered pairs. Indeed any pair $a_i < a_j, b_i < b_j$ would be mapped to $a_{p_i} < a_{p_j}, b_{p_i} < b_{p_j}$.
 It means we can sort!
 
 Now, one of arrays (lets say _a_) is completely ordered. Let's use the same idea, but instead of counting array we will modify entries in _matrix_.
@@ -50,8 +50,18 @@ for i in range(n):
    T.update((a[i], b[i]), 1)
    cnt += T.prefix((a[i]-1, b[i]-1))
 ```
-Every _a[k] < a[i]_ appears before _a[i]_. 
+Every $a_k < a_i$ appears before $a_i$. 
 This works in $O(n \cdot \log^2 n)$ time for 2D Fenwick tree.
+
+### Solution $O(n \cdot \log n)$
+There's another way how we can benefit from permutation properties.
+If _b_ is permutation and _a_ is array with distinct elements, then the following algorithm would count coordered pairs:
+```
+for i in range(n):
+   T.update(a[b[i]], 1)
+   cnt += T.prefix(a[b[i]]-1)
+```
+However, when _a_ or _b_ contains equal elements this algorithm would count extra pairs. 
 
 ### Build
 ```
