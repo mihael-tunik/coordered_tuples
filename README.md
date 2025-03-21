@@ -55,13 +55,20 @@ This works in $O(n \cdot \log^2 n)$ time for 2D Fenwick tree.
 
 ### Solution $O(n \cdot \log n)$
 There's another way how we can benefit from permutation properties.
-If _b_ is permutation and _a_ is array with distinct elements, then the following algorithm would count coordered pairs:
+If _b_ is permutation and _a_ is arbitrary array, then the following algorithm would count coordered pairs:
 ```
+b = sort((b, range(n)))
+p = b[1, :]
+
 for i in range(n):
-   T.update(a[b[i]], 1)
-   cnt += T.prefix(a[b[i]]-1)
+   T.update(a[p[i]], 1)
+   cnt += T.prefix(a[p[i]]-1)
 ```
-However, when _a_ or _b_ contains equal elements this algorithm would count extra pairs. 
+However, when _b_ contains equal elements this algorithm would count extra pairs. 
+To correct this we need to iterate groups of equal elements in _b_ 
+and decrease the answer by number of pairs ordered by _a_, equal by _b_.
+
+Corrections are made in $\sum n_k \log(n_k) < \sum n_k \log(n) = O(n \log(n))$ time, where $n_1..k$ are sizes of groups with equal elements.
 
 ### Build
 ```
