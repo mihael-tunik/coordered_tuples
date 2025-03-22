@@ -58,7 +58,7 @@ There's another way how we can benefit from permutation properties.
 If _b_ is array with distinct elements and _a_ is arbitrary array, then the following algorithm would count coordered pairs:
 ```
 b = sort((b, range(n)))
-p = b[1, :]
+p = b[1, :] # extract indexes
 
 for i in range(n):
    T.update(a[p[i]], 1)
@@ -75,7 +75,7 @@ sum += count_coordered_fenwick_p(a_group, range);
 ```
 one can use any code which counts ordered pairs in single array, range variable is redundant.
 Corrections are made in $\sum n_k \log(n_k) < \sum n_k \log(n) = O(n \log(n))$ time, where $n_{1..k}$ are sizes of groups with equal elements.
-This version of algorithm contains sorting, split sorted array in linear time and counting pairs with some corrections.
+This version of algorithm contains sorting, splitting sorted array in linear time and counting pairs with some corrections.
 Resulting complexity: $O(n \cdot \log n)$.
 ### Build
 ```
