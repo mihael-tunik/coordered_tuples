@@ -13,6 +13,20 @@ using namespace std;
 
 typedef unsigned long long ull;
 
+void compress_coordinates(vector <int> &a, vector <int> &c) {
+    vector <int> b = a;
+    map <int, int> m;
+
+    sort(b.begin(), b.end());
+
+    for (int x : b)
+        if (!m.count(x))
+            m[x] = m.size();
+
+    for (int i = 0; i < a.size(); ++i)
+        c[i] = m[a[i]];
+}
+
 class FenwickTree2D {
 
     public:
@@ -47,12 +61,18 @@ class FenwickTree2D {
 };
 
 ull count_coordered_fenwick_2d(vector <int> &a, vector <int> &b){
-    ull n = a.size(), cnt = 0, M = 20000;
-    FenwickTree2D range_tree(M+1, M+1);
+    ull n = a.size(), cnt = 0;
+    vector <int> a_(n), b_(n);    
+    
+    compress_coordinates(a, a_);
+    compress_coordinates(b, b_);
+
+    ull M1 = *max_element(a_.begin(), a_.end()), M2 = *max_element(b_.begin(), b_.end());
+    FenwickTree2D range_tree(M1+1, M2+1);
     
     vector <pair <int, int>> c(n);
     for(int i = 0; i < n; ++i)
-       c[i] = {a[i], b[i]};
+       c[i] = {a_[i], b_[i]};
     sort(c.begin(), c.end());
 
     for(int i = 0; i < n; ++i){
@@ -89,10 +109,12 @@ class FenwickTree{
     }
 };
 
+
+
 /* count #{a[i] < a[j] && p[i] < p[j]}, p is permutation */
 ull count_coordered_fenwick_p(vector <int> a, vector <int> p){
-    ull n = a.size(), cnt = 0, M = 20000;
-    FenwickTree range_tree(M+1);
+    ull n = a.size(), cnt = 0, M = *max_element(a.begin(), a.end());
+    FenwickTree range_tree(M + 1);
     
     for(int i = 0; i < n; ++i){
         range_tree.modify(a[p[i]], 1);
@@ -119,11 +141,17 @@ void compute_equal_groups(vector <pair <int, int>> &pairs, vector <pair <int, in
 // a.size() == b.size()
 ull count_coordered_fenwick(vector <int> &a, vector <int> &b){
     ull n = a.size(), sum = 0;
+    vector <int> a_(n), b_(n);    
+    
+    compress_coordinates(a, a_);
+    compress_coordinates(b, b_);
+    //a = a_, b = b_;
+
     vector <pair<int, int>> b_indexed(n), eq_groups;
     vector <int> b_p(n);
 
     for(int i = 0; i < n; ++i)
-        b_indexed[i] = {b[i], i};
+        b_indexed[i] = {b_[i], i};
     sort(b_indexed.begin(), b_indexed.end());
 
     for(int i = 0; i < n; ++i)
@@ -135,10 +163,10 @@ ull count_coordered_fenwick(vector <int> &a, vector <int> &b){
         int len = r - l + 1; 
         vector <int> a_group(len), range(len);
         for(int i = 0; i < len; ++i)
-            a_group[i] = a[b_p[l + i]], range[i] = i;
+            a_group[i] = a_[b_p[l + i]], range[i] = i;
         sum += count_coordered_fenwick_p(a_group, range);
     }
-    return count_coordered_fenwick_p(a, b_p) - sum;
+    return count_coordered_fenwick_p(a_, b_p) - sum;
 }
 
 ull count_coordered(vector <int> &a, vector <int> &b){
@@ -160,7 +188,7 @@ void print_array(vector <int> v){
 
 int main(void){
 
-    int n = 20, tests = 10, fails = 0;
+    int n = 20, tests = 1000, fails = 0;
     vector <int> a(n), b(n);
     
     srand(123);
@@ -186,16 +214,18 @@ int main(void){
 
     cout << endl << "failed: " << fails << "/" << tests << endl << endl;
     /* now max test */
-    int n_max = 20000;
+    int n_max = 50000;
 
     a.resize(n_max), b.resize(n_max);
     for(int i = 0; i < n_max; ++i)
         a[i] = rand() % 20000, b[i] = rand() % 20000;
 
+    cout << "maxtest: " << endl;
+    
     int cnt_1 = profile(&count_coordered, a, b);
     int cnt_2 = profile(&count_coordered_fenwick_2d, a, b);
     int cnt_3 = profile(&count_coordered_fenwick, a, b);
 
-    printf("maxtest count: %i, %i, %i\n", cnt_1, cnt_2, cnt_3);
+    printf("count: %i, %i, %i\n", cnt_1, cnt_2, cnt_3);
     return 0;
 }
