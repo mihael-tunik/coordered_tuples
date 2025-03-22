@@ -186,7 +186,7 @@ int main(void){
 
     cout << endl << "failed: " << fails << "/" << tests << endl << endl;
     /* now max test */
-    /*int n_max = 20000;
+    int n_max = 20000;
 
     a.resize(n_max), b.resize(n_max);
     for(int i = 0; i < n_max; ++i)
@@ -196,6 +196,6 @@ int main(void){
     int cnt_2 = profile(&count_coordered_fenwick_2d, a, b);
     int cnt_3 = profile(&count_coordered_fenwick, a, b);
 
-    printf("maxtest count: %i, %i, %i\n", cnt_1, cnt_2, cnt_3);*/
+    printf("maxtest count: %i, %i, %i\n", cnt_1, cnt_2, cnt_3);
     return 0;
 }

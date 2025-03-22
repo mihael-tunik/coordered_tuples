@@ -11,10 +11,10 @@
 
 using namespace std;
 
-//template <typename T>
-//void profile(int (*_func)(T &), T a);
+template <typename T>
+void profile(int (*_func)(T &), T a);
 
-/*template <typename T>
+template <typename T>
 void profile(int (*_func)(T &), T a){
     std::chrono::high_resolution_clock::time_point start, stop;
 
@@ -23,7 +23,7 @@ void profile(int (*_func)(T &), T a){
     stop = chrono::high_resolution_clock::now();
     
     printf("Ready in %lf s.\n", chrono::duration<double, milli>(stop-start).count()/1000);
-}*/
+}
 
 template <typename T, typename R>
 R profile(R (*_func)(T &, T &), T a, T b);
