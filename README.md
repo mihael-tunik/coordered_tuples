@@ -70,7 +70,7 @@ for i in range(n):
 ```
 
 Suppose, you solve the coordered count problem for array $c_i = a_{p_{i}}$.
-Then you count $c_i < c_j, i < j$ that is exactly  $a_p_i < a_p_j, p_i < p_j$.
+Then you count $c_i < c_j, i < j$ that is exactly  $a_{p_{i}} < a_{p_{j}}, p_i < p_j$.
 
 However, when _b_ contains equal elements this algorithm would count extra pairs. 
 To correct this we need to iterate groups of equal elements in _b_ 
