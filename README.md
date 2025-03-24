@@ -72,10 +72,9 @@ for i in range(n):
 Suppose, you solve the coordered count problem for array $c_k = a_{p_{k}}$.
 
 > This way you count $c_i < c_j, i < j$ that corresponds exactly to $a_{p_{i}} < a_{p_{j}}, i < j$.
-Then say $i = p^{-1}(u), j = p^{-1}(v)$, and pairs can be viewed as $a_{u} < a_{v}}, p^{-1}_u < p^{-1}_v$.
-Last thing we need to find $p: p^{-1} = b$. 
+Then say $i = p^{-1}(u), j = p^{-1}(v)$, and pairs can be viewed as $a_{u} < a_{v}, p^{-1}_u < p^{-1}_v$.
 
-This can be done in $O(n \cdot \log n)$ by simultaneous sorting _b_ and range from 1 to _n_.
+Last thing we need to find $p: p^{-1} = b$. This can be done in $O(n \cdot \log n)$ by simultaneous sorting _b_ and range from 1 to _n_.
 
 However, when _b_ contains equal elements (and therefore bijections doesn't work) this algorithm would count extra pairs. 
 
