@@ -69,19 +69,26 @@ for i in range(n):
    cnt += T.prefix(a[p[i]]-1)
 ```
 
-Suppose, you solve the coordered count problem for array $c_i = a_{p_{i}}$.
-Then you count $c_i < c_j, i < j$ that is exactly  $a_{p_{i}} < a_{p_{j}}, p_i < p_j$.
+Suppose, you solve the coordered count problem for array $c_k = a_{p_{k}}$.
 
-However, when _b_ contains equal elements this algorithm would count extra pairs. 
+> This way you count $c_i < c_j, i < j$ that corresponds exactly to $a_{p_{i}} < a_{p_{j}}, i < j$.
+Then say $i = p^{-1}(u), j = p^{-1}(v)$, and pairs can be viewed as $a_{u} < a_{v}}, p^{-1}_u < p^{-1}_v$.
+Last thing we need to find $p: p^{-1} = b$. 
+
+This can be done in $O(n \cdot \log n)$ by simultaneous sorting _b_ and range from 1 to _n_.
+
+However, when _b_ contains equal elements (and therefore bijections doesn't work) this algorithm would count extra pairs. 
+
 To correct this we need to iterate groups of equal elements in _b_ 
-and decrease the answer by number of pairs ordered by _a_, equal by _b_.
+and decrease the answer by number of pairs ordered by _a_, but equal by _b_.
 
 It is not necessary to use
 ```
 sum += count_coordered_fenwick_p(a_group, range);
 ```
 one can use any code which counts ordered pairs in single array, range variable is redundant.
-Corrections are made in $\sum n_k \log(n_k) < \sum n_k \log(n) = O(n \log(n))$ time, where $n_{1..k}$ are sizes of groups with equal elements.
+
+Corrections are made in $\sum n_k \log(n_k) < \sum n_k \log n = O(n \log n)$ time, where $n_{1..k}$ are sizes of groups with equal elements.
 This version of algorithm contains sorting, splitting sorted array in linear time and counting pairs with some corrections.
 Resulting complexity: $O(n \cdot \log n)$.
 
